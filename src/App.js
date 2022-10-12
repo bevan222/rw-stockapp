@@ -10,13 +10,11 @@ import {signInWithEmailAndPassword } from "firebase/auth";
 
 
 async function fetchData(setStockData, searchData, db, setNoteData, setStockInformation, firstRender, isFetch) {
-  console.log('fetch data start')
   const res = await fetch('https://api.fugle.tw/marketdata/v0.3/candles?symbolId='+searchData.current.stockCode+'&apiToken=' + process.env.REACT_APP_FUGLE_API_KEY + '&from=' + searchData.current.startDate +'&to=' + searchData.current.endDate)
   .then((response) => response.json()) //2
   .then((stockDataList) => {
     stockDataList.candles.reverse() //3
     setStockData(stockDataList)
-    console.log('stock data set complete')
   })
   .catch(() => {
     firstRender.current = true
@@ -28,11 +26,9 @@ async function fetchData(setStockData, searchData, db, setNoteData, setStockInfo
 }
 
 async function getStockinformation(setStockInformation, stockCode) {
-  console.log('https://api.fugle.tw/realtime/v0.3/intraday/meta?symbolId=' + stockCode + '&apiToken=' + process.env.REACT_APP_FUGLE_API_KEY)
   const res = await fetch('https://api.fugle.tw/realtime/v0.3/intraday/meta?symbolId=' + stockCode + '&apiToken=' + process.env.REACT_APP_FUGLE_API_KEY)
   .then((response) => response.json()) //2
   .then((qStockInformation) => {
-    console.log(qStockInformation)
     setStockInformation(qStockInformation)
   })
 }
@@ -52,7 +48,6 @@ async function getNote(db, searchData, setNoteData){
         startDate = new Date(startDate.getTime() + 24*60*60*1000)
       }
       setNoteData(noteObj)
-      console.log('note set complete')
     }
     else{
       while(startDate <= endDate){
@@ -91,12 +86,8 @@ const Home = () => {
 
   useEffect(() => {
     if(!firstRender){
-      console.log('change rerender')
       fetchData(setStockData,searchData, database, setNoteData, setStockInformation, firstRender, isFetch).then(()=>{
         isFetch.current = true
-        console.log({stockData})
-        console.log({stockInformation})
-        console.log({noteData})
       })
     }
   }, [searchData])
@@ -115,19 +106,14 @@ const Home = () => {
     let color = e.target[1].value
     
     if(type == 'lessThan'){
-      console.log(type)
-      console.log(color)
       setLessThanColor(color)
     }
     else if(type == 'greaterOrEqual'){
-      console.log(type)
-      console.log(color)
       setGreaterOrEqualColor(color)
     }
   }
   
   const fireBaseSubmit = async (e) => {
-    console.log('submit start')
     e.preventDefault();
     let date = e.target[0].value
     let note = e.target[1].value
@@ -147,9 +133,6 @@ const Home = () => {
     isFetch.current = false
     fetchData(setStockData,searchData, database, setNoteData, setStockInformation, firstRender, isFetch).then(()=>{
       isFetch.current = true
-      console.log({stockData})
-      console.log({stockInformation})
-      console.log({noteData})
     })
   }
 
@@ -206,7 +189,6 @@ const Home = () => {
   }
   
   if(firstRender.current == true){
-    console.log('first render without data')
     return(
       <div className="px-2">
         <div className="row justify-content-center">
@@ -237,7 +219,6 @@ const Home = () => {
     ) 
   }
   if(stockData.length === 0 || !isFetch.current){
-    console.log('loading')
     return(<div>loading</div>)
   }
   var dataIndex = 0

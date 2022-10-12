@@ -192,7 +192,7 @@ const Home = () => {
     return(
       <div className="px-2">
         <div className="row justify-content-center">
-            <h1 className="col-auto ">請輸入股票代碼</h1>
+            <h1 className="col-auto ">請輸入查詢資料</h1>
         </div>
 
         <div className="card">
@@ -207,7 +207,7 @@ const Home = () => {
                 </div>
 
                 <div className="form-row form-group">
-                  <label className="col-3 col-md-2 col-form-label " defaultValue="Bob">輸入股票代碼: </label>
+                  <label className="col-3 col-md-2 col-form-label " defaultValue="Bob">股票代碼: </label>
                   <div className="">
                     <input name="stockCode" className="form-control w-auto" onChange={handleSearchChange}></input>
                   </div>
@@ -244,7 +244,7 @@ const Home = () => {
               </div>
 
               <div className="form-row form-group">
-                <label className="col-3 col-md-2 col-form-label " defaultValue="Bob">輸入股票代碼: </label>
+                <label className="col-3 col-md-2 col-form-label " defaultValue="Bob">股票代碼: </label>
                 <div className="">
                   <input name="stockCode" className="form-control w-auto" onChange={handleSearchChange}></input>
                 </div>

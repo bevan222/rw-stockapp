@@ -86,6 +86,10 @@ const Home = () => {
   var startDay = new Date(today.getTime() - 24*60*60*1000*5)
 
   useEffect(() => {
+    document.title = "rw-stockapp";  
+  }, []);
+
+  useEffect(() => {
     if(!firstRender){
       console.log('change rerender')
       fetchData(setStockData,searchData, database, setNoteData, setStockInformation, firstRender, isFetch).then(()=>{

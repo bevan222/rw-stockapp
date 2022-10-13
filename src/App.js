@@ -6,6 +6,7 @@ import "firebase/compat/database";
 import firebaseConfig from '../src/component/firebaseConfig';
 import PriceChart from "./component/PriceChart";
 import {signInWithEmailAndPassword } from "firebase/auth";
+import ExcelJs from "exceljs";
 
 
 
@@ -109,6 +110,38 @@ const Home = () => {
     searchData.current.startDate = today.toISOString().slice(0,10);
     
     console.log(searchData.current)
+  }
+
+  const exportOnclick = (e) => {
+    const workbook = new ExcelJs.Workbook();
+    const sheet = workbook.addWorksheet('工作表名稱');
+    let excelData = []
+    stockData.candles.map((item)=>{
+      let excelRow = []
+      excelRow[0] = item.date
+      excelRow[1] = item.high
+      excelRow[2] = item.low
+      excelRow[3] = item.close
+      excelRow[4] = noteData[item.date]
+      excelData.push(excelRow)
+    })
+    console.log(excelData)
+    sheet.addTable({
+      name: 'table名稱',  // 表格內看不到的，算是key值，讓你之後想要針對這個table去做額外設定的時候，可以指定到這個table
+      ref: 'A1', // 從A1開始
+      columns: [{name:'日期'},{name:'最高'},{name:'最低'},{name:'收盤'},{name:'備註/筆記'}],
+      rows: excelData
+    });
+
+    workbook.xlsx.writeBuffer().then((content) => {
+      const link = document.createElement("a");
+      const blobData = new Blob([content], {
+        type: "application/vnd.ms-excel;charset=utf-8;"
+      });
+      link.download = searchData.current.startDate + '~' +searchData.current.endDate+ ' ' + stockData.symbolId + ' ' + stockInformation.data.meta.nameZhTw +'.xlsx';
+      link.href = URL.createObjectURL(blobData);
+      link.click();
+    });
   }
 
   const colorSelectSubmit = async (e) => {
@@ -307,6 +340,7 @@ const Home = () => {
             </div>
           </div>           
         </div>
+        <button className="btn btn-secondary" onClick={exportOnclick}>匯出表格</button>
         <div className="col-12 p-2 table-responsive">
           <table className="table table-bordered table-sm table-hover">
               <thead>

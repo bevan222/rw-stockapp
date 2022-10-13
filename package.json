@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^13.5.0",
     "bootstrap": "^5.2.2",
     "chart.js": "^3.9.1",
+    "exceljs": "^4.3.0",
     "firebase": "^9.11.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.5.0",

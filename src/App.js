@@ -371,7 +371,7 @@ const Home = () => {
                     var date = new Date(item.date)
                     return (
                       <tr key={item.date}>
-                          <td className="text-nowrap" style={{color: date.getDay() == 5 ? 'red':'green'}}>{item.date.slice(5,10)}</td>
+                          <td className="text-nowrap" style={{color: date.getDay() == 5 ? 'red':'green'}}>{item.date.slice(5,10).replaceAll('-','/')}</td>
                           <td>{item.high}</td>
                           <td>{item.low}</td>
                           <td>{item.close}</td>
@@ -393,7 +393,7 @@ const Home = () => {
                   dataIndex +=1 
                   return (
                       <tr key={item.date}>
-                          <td style={{color: date.getDay() == 5 ? 'red':'green'}}>{item.date.slice(5,10)}</td>
+                          <td style={{color: date.getDay() == 5 ? 'red':'green'}}>{item.date.slice(5,10).replaceAll('-','/')}</td>
                           <td style={{color: item.high >= stockData.candles[dataIndex-2].close ? greaterOrEqualColor:lessThanColor}}>{item.high}</td>
                           <td style={{color: item.low >= stockData.candles[dataIndex-2].close ? greaterOrEqualColor:lessThanColor}}>{item.low}</td>
                           <td style={{color: item.close >= stockData.candles[dataIndex-2].close ? greaterOrEqualColor:lessThanColor }}>{item.close}</td>

@@ -141,10 +141,13 @@ const Home = () => {
       row.eachCell( function(cell, colNumber){
         var date = new Date(row.getCell(1).value)
         if(rowNumber > 1 && colNumber == 1){
+          console.log(date)
           if(date.getDay() == 5){
-            row.getCell(colNumber).font = {color: {argb: 'FF0000'}};
+            row.getCell(1).font = {color: {argb: 'FF0000'}};
+            row.getCell(1).value = row.getCell(1).value.slice(5,10).replaceAll('-','/')
           }else{
-            row.getCell(colNumber).font = {color: {argb: '32CD32'}};
+            row.getCell(1).font = {color: {argb: '32CD32'}};
+            row.getCell(1).value.slice(5,10).replaceAll('-','/')
           }
         }
 
@@ -314,6 +317,7 @@ const Home = () => {
   }
   var dataIndex = 0
   if(!firstRender.current){
+    console.log(stockData)
     return (
       <div>
         <div className="px-2">

@@ -133,6 +133,22 @@ const Home = () => {
       columns: [{name:'日期'},{name:'最高'},{name:'最低'},{name:'收盤'},{name:'備註/筆記'}],
       rows: excelData
     });
+    var lastRow = null
+    sheet.eachRow(function(row, rowNumber){
+      if(lastRow == null ){
+        lastRow = row
+      }
+      row.eachCell( function(cell, colNumber){
+        if(rowNumber > 1 && colNumber > 1 && colNumber < 5){
+          if(row.getCell(colNumber).value > lastRow.getCell(4).value){
+            row.getCell(colNumber).font = {color: {argb: greaterOrEqualColor.substring(1)}};
+          }else{
+            row.getCell(colNumber).font = {color: {argb: lessThanColor.substring(1)}};
+          }
+        }
+      });
+      lastRow = row
+    });
 
     workbook.xlsx.writeBuffer().then((content) => {
       const link = document.createElement("a");

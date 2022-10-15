@@ -351,10 +351,16 @@ const Home = () => {
             </div>
           </div>           
         </div>
-        <button className="btn btn-secondary" onClick={exportOnclick}>匯出表格</button>
         <div className="col-12 p-2 table-responsive">
           <table className="table table-bordered table-sm table-hover">
-              <thead>
+            <thead>
+              <tr>
+                <th colSpan={5} className="text-center">
+                  {stockData.symbolId + stockInformation.data.meta.nameZhTw + ' ' + searchData.current.startDate.replaceAll('-','/') + '~' + searchData.current.endDate.replaceAll('-','/')} 
+                  <button className=" mx-3 btn btn-secondary" onClick={exportOnclick}>匯出表格</button>
+                </th>
+              </tr>
+              
               <tr>
                   <th className="text-nowrap">日期</th>
                   <th className="text-nowrap">最高</th>

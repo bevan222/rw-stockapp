@@ -139,6 +139,15 @@ const Home = () => {
         lastRow = row
       }
       row.eachCell( function(cell, colNumber){
+        var date = new Date(row.getCell(1).value)
+        if(rowNumber > 1 && colNumber == 1){
+          if(date.getDay() == 5){
+            row.getCell(colNumber).font = {color: {argb: 'FF0000'}};
+          }else{
+            row.getCell(colNumber).font = {color: {argb: '32CD32'}};
+          }
+        }
+
         if(rowNumber > 1 && colNumber > 1 && colNumber < 5){
           if(row.getCell(colNumber).value > lastRow.getCell(4).value){
             row.getCell(colNumber).font = {color: {argb: greaterOrEqualColor.substring(1)}};
@@ -150,6 +159,7 @@ const Home = () => {
       lastRow = row
     });
 
+    
     workbook.xlsx.writeBuffer().then((content) => {
       const link = document.createElement("a");
       const blobData = new Blob([content], {

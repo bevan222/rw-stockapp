@@ -147,7 +147,7 @@ const Home = () => {
             row.getCell(1).value = row.getCell(1).value.slice(5,10).replaceAll('-','/')
           }else{
             row.getCell(1).font = {color: {argb: '32CD32'}};
-            row.getCell(1).value.slice(5,10).replaceAll('-','/')
+            row.getCell(1).value = row.getCell(1).value.slice(5,10).replaceAll('-','/')
           }
         }
 

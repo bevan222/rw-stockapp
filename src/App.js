@@ -7,6 +7,7 @@ import firebaseConfig from '../src/component/firebaseConfig';
 import PriceChart from "./component/PriceChart";
 import {signInWithEmailAndPassword } from "firebase/auth";
 import ExcelJs from "exceljs";
+import Footer from "./component/Footer"
 
 
 
@@ -203,32 +204,37 @@ const Home = () => {
   }
   if(user.current == null){
     return(
-      <div class="col-md-8 col-lg-7 mx-auto px-2">
-        <div className="row justify-content-center">
-          <h1 className="col-auto">rw - stockapp</h1>
-        </div>
-        <div className="card">
-          <div class="card-body">
-            <form onSubmit={loginSubmit}>
-              <div class="form-row form-group">
-                <label className="col-3 col-form-label">Email:</label>
-                <div class="col">
-                  <input type="email" className="form-control" name="email"></input>
-                </div>
-              </div>
-
-              <div class="form-row form-group">
-                <label type="password" className="col-3 col-form-label">密碼:</label>
-                <div class="col">
-                  <input type="password" className="form-control" name="password"/>
-                </div>
-              </div>
-
-              <div className="row justify-content-center">
-                  <button type="submit" className="btn btn-primary col-auto my-2">登入</button>
-              </div>
-            </form>
+      <div>
+        <div class="col-md-8 col-lg-7 mx-auto px-2">
+          <div className="row justify-content-center">
+            <h1 className="col-auto">rw - stockapp</h1>
           </div>
+          <div className="card">
+            <div class="card-body">
+              <form onSubmit={loginSubmit}>
+                <div class="form-row form-group">
+                  <label className="col-3 col-form-label">Email:</label>
+                  <div class="col">
+                    <input type="email" className="form-control" name="email"></input>
+                  </div>
+                </div>
+
+                <div class="form-row form-group">
+                  <label type="password" className="col-3 col-form-label">密碼:</label>
+                  <div class="col">
+                    <input type="password" className="form-control" name="password"/>
+                  </div>
+                </div>
+
+                <div className="row justify-content-center">
+                    <button type="submit" className="btn btn-primary col-auto my-2">登入</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div className="fixed-bottom">
+          <Footer/>
         </div>
       </div>
     )
@@ -236,38 +242,43 @@ const Home = () => {
   
   if(firstRender.current == true){
     return(
-      <div className="px-2">
-        <div className="row justify-content-center">
-            <h1 className="col-auto ">請輸入查詢資料</h1>
+      <div>
+        <div className="px-2">
+          <div className="row justify-content-center">
+              <h1 className="col-auto ">請輸入查詢資料</h1>
+          </div>
+
+          <div className="card">
+              <form onSubmit={handleSearchSubmit} className="col-auto m-2">
+                <div className="form-row form-group">
+                  <label className="col-3 col-md-2 col-form-label ">股票代碼: </label>
+                  <div className="">
+                    <input name="stockCode" className="form-control w-auto" onChange={handleSearchChange}></input>
+                  </div>
+                </div>
+
+                <div className="col">
+                  <button value="1" type="submit" className="btn btn-primary my-2" onClick={quickSearchOnclick}>一個月前至最近交易日</button>
+                  <button value="3" type="submit" className="btn btn-primary m-2" onClick={quickSearchOnclick}>三個月前至最近交易日</button>
+                  <button value="6" type="submit" className="btn btn-primary m-2" onClick={quickSearchOnclick}>六個月前至最近交易日</button>
+                  <button value="12" type="submit" className="btn btn-primary m-2" onClick={quickSearchOnclick}>一年前至最近交易日</button>
+                </div>
+                <div className="my-4">
+                  <div className="form-row form-group">
+                    <label className="col-3 col-md-2 col-form-label">開始時間: </label>
+                      <input name="startDate" className="form-control w-auto" type="date" onChange={handleSearchChange}></input>
+                  </div>
+                  <div className="form-row form-group">
+                    <label className="col-3 col-md-2 col-form-label ">結束時間: </label>
+                    <input name="endDate" className="form-control w-auto" type="date" onChange={handleSearchChange}></input>
+                  </div>
+                  <button type="submit" className="btn btn-primary my-2">區間查詢股票代碼</button>
+                </div>
+              </form>
+          </div>
         </div>
-
-        <div className="card">
-            <form onSubmit={handleSearchSubmit} className="col-auto m-2">
-              <div className="form-row form-group">
-                <label className="col-3 col-md-2 col-form-label ">股票代碼: </label>
-                <div className="">
-                  <input name="stockCode" className="form-control w-auto" onChange={handleSearchChange}></input>
-                </div>
-              </div>
-
-              <div className="col">
-                <button value="1" type="submit" className="btn btn-primary my-2" onClick={quickSearchOnclick}>一個月前至最近交易日</button>
-                <button value="3" type="submit" className="btn btn-primary m-2" onClick={quickSearchOnclick}>三個月前至最近交易日</button>
-                <button value="6" type="submit" className="btn btn-primary m-2" onClick={quickSearchOnclick}>六個月前至最近交易日</button>
-                <button value="12" type="submit" className="btn btn-primary m-2" onClick={quickSearchOnclick}>一年前至最近交易日</button>
-              </div>
-              <div className="my-4">
-                <div className="form-row form-group">
-                  <label className="col-3 col-md-2 col-form-label">開始時間: </label>
-                    <input name="startDate" className="form-control w-auto" type="date" onChange={handleSearchChange}></input>
-                </div>
-                <div className="form-row form-group">
-                  <label className="col-3 col-md-2 col-form-label ">結束時間: </label>
-                  <input name="endDate" className="form-control w-auto" type="date" onChange={handleSearchChange}></input>
-                </div>
-                <button type="submit" className="btn btn-primary my-2">區間查詢股票代碼</button>
-              </div>
-            </form>
+        <div className="fixed-bottom">
+          <Footer/>
         </div>
       </div>
     ) 
@@ -403,6 +414,7 @@ const Home = () => {
               </tbody>
           </table>
         </div>
+        <Footer/>
       </div>
     );
   }

@@ -393,8 +393,8 @@ const Home = () => {
               
               <tr>
                   <th className="text-nowrap">日期</th>
-                  <th className="text-nowrap">最高</th>
                   <th className="text-nowrap">最低</th>
+                  <th className="text-nowrap">最高</th>
                   <th className="text-nowrap">收盤</th>
                   <th className="text-nowrap">備註</th>
               </tr>
@@ -408,8 +408,8 @@ const Home = () => {
                     return (
                       <tr key={item.date}>
                           <td className="text-nowrap" style={{color: date.getDay() == 5 ? 'red':'green'}}>{item.date.slice(5,10).replaceAll('-','/')}</td>
-                          <td>{item.high}</td>
                           <td>{item.low}</td>
+                          <td>{item.high}</td>
                           <td>{item.close}</td>
                           <td>
                               <form onSubmit={fireBaseSubmit} className="text-nowrap form-inline">
@@ -430,8 +430,8 @@ const Home = () => {
                   return (
                       <tr key={item.date}>
                           <td style={{color: date.getDay() == 5 ? 'red':'green'}}>{item.date.slice(5,10).replaceAll('-','/')}</td>
-                          <td style={{color: item.high >= stockData.candles[dataIndex-2].close ? greaterOrEqualColor:lessThanColor}}>{item.high}</td>
                           <td style={{color: item.low >= stockData.candles[dataIndex-2].close ? greaterOrEqualColor:lessThanColor}}>{item.low}</td>
+                          <td style={{color: item.high >= stockData.candles[dataIndex-2].close ? greaterOrEqualColor:lessThanColor}}>{item.high}</td>
                           <td style={{color: item.close >= stockData.candles[dataIndex-2].close ? greaterOrEqualColor:lessThanColor }}>{item.close}</td>
                           <td>
                               <form onSubmit={fireBaseSubmit} className="text-nowrap form-inline">

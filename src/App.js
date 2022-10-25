@@ -120,8 +120,8 @@ const Home = () => {
     stockData.candles.map((item)=>{
       let excelRow = []
       excelRow[0] = item.date
-      excelRow[1] = item.high
-      excelRow[2] = item.low
+      excelRow[1] = item.low
+      excelRow[2] = item.high
       excelRow[3] = item.close
       excelRow[4] = noteData[item.date]
       excelData.push(excelRow)
@@ -130,7 +130,7 @@ const Home = () => {
     sheet.addTable({
       name: 'table名稱',  // 表格內看不到的，算是key值，讓你之後想要針對這個table去做額外設定的時候，可以指定到這個table
       ref: 'A1', // 從A1開始
-      columns: [{name:'日期'},{name:'最高'},{name:'最低'},{name:'收盤'},{name:'備註/筆記'}],
+      columns: [{name:'日期'},{name:'最低'},{name:'最高'},{name:'收盤'},{name:'備註/筆記'}],
       rows: excelData
     });
     var lastRow = null

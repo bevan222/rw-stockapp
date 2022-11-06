@@ -1,4 +1,4 @@
 node_modules
-.firebaserc
-.env.local
-.firebase
+firebaserc
+env.local
+firebase

@@ -2,3 +2,4 @@ node_modules
 firebaserc
 env.local
 firebase
+src/component/firebaseConfig.js

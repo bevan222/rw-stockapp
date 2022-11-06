@@ -1,8 +1,16 @@
 # initial setting
 
+run npm install
+
 ## set up firebase
 
+1. copy your firebase project's config to the src/component/firebaseConfigExample.js file and modify the file name to firebaseConfig.js
 
+2. firebase login
+
+3. firebase init
+
+4. firebase deploy
 
 # Getting Started with Create React App
 

@@ -6,11 +6,13 @@ run npm install
 
 1. copy your firebase project's config to the src/component/firebaseConfigExample.js file and modify the file name to firebaseConfig.js
 
-2. firebase login
+2. copy your [fugle API](https://developer.fugle.tw) to .env.local.example and modify the name to .env.local
 
-3. firebase init
+3. firebase login
 
-4. firebase deploy
+4. firebase init
+
+5. firebase deploy
 
 # Getting Started with Create React App
 

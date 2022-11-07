@@ -381,14 +381,18 @@ const Home = () => {
             </div>
           </div>           
         </div>
-        <div className="col-12 p-2 table-responsive">
+        <div name="top" className="col-12 p-2 table-responsive">
           <table className="table table-bordered table-sm table-hover">
             <thead>
               <tr>
                 <th colSpan={5} className="text-center">
-                  {stockData.symbolId + stockInformation.data.meta.nameZhTw + ' ' + searchData.current.startDate.replaceAll('-','/') + '~' + searchData.current.endDate.replaceAll('-','/')} 
-                  <button className=" mx-3 btn btn-secondary" onClick={exportOnclick}>匯出表格</button>
-                  <a name="top" href="#buttom" className="mx-3 text-nowrap">移至最下方</a>
+                  <div>
+                    {stockData.symbolId + stockInformation.data.meta.nameZhTw + ' ' + searchData.current.startDate.replaceAll('-','/') + '~' + searchData.current.endDate.replaceAll('-','/')} 
+                  </div>
+                  <div>
+                    <button className=" mx-3 btn btn-secondary" onClick={exportOnclick}>匯出表格</button>
+                    <a href="#buttom" className="mx-3 text-nowrap">移至最下方</a>
+                  </div>
                 </th>
               </tr>
               
@@ -449,7 +453,7 @@ const Home = () => {
                   );
               })}
               <td className="text-center" colSpan={5}>
-                <a name="buttom" href="#top" className="font-weight-bold">移至表格上方</a>
+                <a name="buttom" href="#top" className="font-weight-bold">移至最上方</a>
               </td>
               </tbody>
           </table>

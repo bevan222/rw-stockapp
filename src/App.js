@@ -120,8 +120,8 @@ const Home = () => {
     stockData.candles.map((item)=>{
       let excelRow = []
       excelRow[0] = item.date
-      excelRow[1] = item.low
-      excelRow[2] = item.high
+      excelRow[1] = item.high
+      excelRow[2] = item.low
       excelRow[3] = item.close
       excelRow[4] = noteData[item.date]
       excelData.push(excelRow)
@@ -130,7 +130,7 @@ const Home = () => {
     sheet.addTable({
       name: 'table名稱',  // 表格內看不到的，算是key值，讓你之後想要針對這個table去做額外設定的時候，可以指定到這個table
       ref: 'A1', // 從A1開始
-      columns: [{name:'日期'},{name:'最低'},{name:'最高'},{name:'收盤'},{name:'備註/筆記'}],
+      columns: [{name:'日期'},{name:'最高'},{name:'最低'},{name:'收盤'},{name:'備註/筆記'}],
       rows: excelData
     });
     var lastRow = null
@@ -393,8 +393,8 @@ const Home = () => {
               
               <tr>
                   <th className="text-nowrap">日期</th>
-                  <th className="text-nowrap">最低</th>
                   <th className="text-nowrap">最高</th>
+                  <th className="text-nowrap">最低</th>
                   <th className="text-nowrap">收盤</th>
                   <th className="text-nowrap">備註</th>
               </tr>
@@ -408,8 +408,8 @@ const Home = () => {
                     return (
                       <tr key={item.date}>
                           <td className="text-nowrap" style={{color: date.getDay() == 5 ? 'red':'green'}}>{item.date.slice(5,10).replaceAll('-','/')}</td>
-                          <td>{item.low}</td>
                           <td>{item.high}</td>
+                          <td>{item.low}</td>
                           <td>{item.close}</td>
                           <td>
                               <form onSubmit={fireBaseSubmit} className="text-nowrap form-inline">
@@ -430,8 +430,8 @@ const Home = () => {
                   return (
                       <tr key={item.date}>
                           <td style={{color: date.getDay() == 5 ? 'red':'green'}}>{item.date.slice(5,10).replaceAll('-','/')}</td>
-                          <td style={{color: item.low >= stockData.candles[dataIndex-2].close ? greaterOrEqualColor:lessThanColor}}>{item.low}</td>
                           <td style={{color: item.high >= stockData.candles[dataIndex-2].close ? greaterOrEqualColor:lessThanColor}}>{item.high}</td>
+                          <td style={{color: item.low >= stockData.candles[dataIndex-2].close ? greaterOrEqualColor:lessThanColor}}>{item.low}</td>
                           <td style={{color: item.close >= stockData.candles[dataIndex-2].close ? greaterOrEqualColor:lessThanColor }}>{item.close}</td>
                           <td>
                               <form onSubmit={fireBaseSubmit} className="text-nowrap form-inline">

@@ -388,6 +388,7 @@ const Home = () => {
                 <th colSpan={5} className="text-center">
                   {stockData.symbolId + stockInformation.data.meta.nameZhTw + ' ' + searchData.current.startDate.replaceAll('-','/') + '~' + searchData.current.endDate.replaceAll('-','/')} 
                   <button className=" mx-3 btn btn-secondary" onClick={exportOnclick}>匯出表格</button>
+                  <a name="top" href="#buttom" className="mx-3 text-nowrap">移至最下方</a>
                 </th>
               </tr>
               
@@ -447,6 +448,9 @@ const Home = () => {
                       </tr>
                   );
               })}
+              <td className="text-center" colSpan={5}>
+                <a name="buttom" href="#top" className="font-weight-bold">移至表格上方</a>
+              </td>
               </tbody>
           </table>
         </div>

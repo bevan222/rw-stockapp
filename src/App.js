@@ -11,7 +11,7 @@ import Footer from "./component/Footer"
 
 
 
-async function fetchData(setStockData, searchData, db, setNoteData, setStockInformation, firstRender, isFetch) {
+async function fetchData(setStockData, setHolidaySchedule, setCapitalReductionData, searchData, db, setNoteData, setStockInformation, firstRender, isFetch) {
   const res = await fetch('https://api.fugle.tw/marketdata/v0.3/candles?symbolId='+searchData.current.stockCode+'&apiToken=' + process.env.REACT_APP_FUGLE_API_KEY + '&from=' + searchData.current.startDate +'&to=' + searchData.current.endDate)
   .then((response) => response.json()) //2
   .then((stockDataList) => {
@@ -25,6 +25,7 @@ async function fetchData(setStockData, searchData, db, setNoteData, setStockInfo
   });
   await getNote(db, searchData, setNoteData)
   await getStockinformation(setStockInformation, searchData.current.stockCode)
+  await getHolidaySchedule(setHolidaySchedule)
 }
 
 async function getStockinformation(setStockInformation, stockCode) {
@@ -61,9 +62,29 @@ async function getNote(db, searchData, setNoteData){
   })
 }
 
+async function getCapitalReductionData(setCapitalReductionData) {
+  const res = await fetch('https://www.twse.com.tw/exchangeReport/TWTAVU?response=json&date=undefined&selectType=undefined')
+  .then((response) => response.json())
+  .then((capitalReductionData) => {
+    console.log(capitalReductionData)
+    setCapitalReductionData(capitalReductionData)
+  })
+}
+
+async function getHolidaySchedule(setHolidaySchedule) {
+  const res = await fetch('https://openapi.twse.com.tw/v1/holidaySchedule/holidaySchedule')
+  .then((response) => response.json())
+  .then((holidaySchedule) => {
+    console.log(holidaySchedule)
+    setHolidaySchedule(holidaySchedule)
+  })
+}
+
 const Home = () => {
   const [stockData, setStockData] = useState([]);
   const [stockInformation, setStockInformation]= useState({});
+  const [capitalReductionData, setCapitalReductionData] = useState({});
+  const [holidaySchedule, setHolidaySchedule] = useState({});
   const user = useRef({});
   const firstRender = useRef(true)
   const isFetch = useRef(false)
@@ -88,7 +109,7 @@ const Home = () => {
 
   useEffect(() => {
     if(!firstRender){
-      fetchData(setStockData,searchData, database, setNoteData, setStockInformation, firstRender, isFetch).then(()=>{
+      fetchData(setStockData,setHolidaySchedule, setCapitalReductionData, searchData, database, setNoteData, setStockInformation, firstRender, isFetch).then(()=>{
         isFetch.current = true
       })
     }
@@ -207,7 +228,7 @@ const Home = () => {
     isFetch.current = false
     let button = event.target[3].value
     console.log(button)
-    fetchData(setStockData,searchData, database, setNoteData, setStockInformation, firstRender, isFetch).then(()=>{
+    fetchData(setStockData,setHolidaySchedule, setCapitalReductionData, searchData, database, setNoteData, setStockInformation, firstRender, isFetch).then(()=>{
       isFetch.current = true
     })
   }
@@ -270,6 +291,8 @@ const Home = () => {
   }
   
   if(firstRender.current == true){
+    console.log(capitalReductionData)
+    console.log(holidaySchedule)
     return(
       <div>
         <div className="px-2">
@@ -312,6 +335,7 @@ const Home = () => {
       </div>
     ) 
   }
+
   if(stockData.length === 0 || !isFetch.current){
     return(<div>loading</div>)
   }
@@ -463,6 +487,5 @@ const Home = () => {
     );
   }
 };
-
 
 export default Home;

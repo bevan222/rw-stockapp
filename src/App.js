@@ -26,7 +26,6 @@ async function fetchData(setStockData, setHolidaySchedule, setCapitalReductionDa
   });
   await getNote(db, searchData, setNoteData)
   await getStockinformation(setStockInformation, searchData.current.stockCode)
-  //await getHolidaySchedule(setHolidaySchedule)
 }
 
 async function getStockinformation(setStockInformation, stockCode) {
@@ -342,6 +341,7 @@ const Home = () => {
   if(stockData.length === 0 || !isFetch.current){
     return(<div>loading</div>)
   }
+
   var dataIndex = 0
   if(!firstRender.current){
     console.log(stockData)

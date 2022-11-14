@@ -25,7 +25,7 @@ async function fetchData(setStockData, setHolidaySchedule, setCapitalReductionDa
   });
   await getNote(db, searchData, setNoteData)
   await getStockinformation(setStockInformation, searchData.current.stockCode)
-  await getHolidaySchedule(setHolidaySchedule)
+  //await getHolidaySchedule(setHolidaySchedule)
 }
 
 async function getStockinformation(setStockInformation, stockCode) {
@@ -62,6 +62,7 @@ async function getNote(db, searchData, setNoteData){
   })
 }
 
+/*
 async function getCapitalReductionData(setCapitalReductionData) {
   const res = await fetch('https://www.twse.com.tw/exchangeReport/TWTAVU?response=json&date=undefined&selectType=undefined')
   .then((response) => response.json())
@@ -79,6 +80,7 @@ async function getHolidaySchedule(setHolidaySchedule) {
     setHolidaySchedule(holidaySchedule)
   })
 }
+*/
 
 const Home = () => {
   const [stockData, setStockData] = useState([]);

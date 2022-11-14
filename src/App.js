@@ -10,35 +10,30 @@ import ExcelJs from "exceljs";
 import Footer from "./component/Footer"
 import FavoriteList from "./component/FavoriteList"
 
-
-
-async function fetchData(setStockData, setHolidaySchedule, setCapitalReductionData, searchData, db, setNoteData, setStockInformation, firstRender, isFetch) {
-  const res = await fetch('https://api.fugle.tw/marketdata/v0.3/candles?symbolId='+searchData.current.stockCode+'&apiToken=' + process.env.REACT_APP_FUGLE_API_KEY + '&from=' + searchData.current.startDate +'&to=' + searchData.current.endDate)
-  .then((response) => response.json()) //2
+async function getStockData(searchData) {
+  let res  = []
+  await fetch('https://api.fugle.tw/marketdata/v0.3/candles?symbolId='+searchData.current.stockCode+'&apiToken=' + process.env.REACT_APP_FUGLE_API_KEY + '&from=' + searchData.current.startDate +'&to=' + searchData.current.endDate)
+  .then((response) => response.json())
   .then((stockDataList) => {
-    stockDataList.candles.reverse() //3
-    setStockData(stockDataList)
+    stockDataList.candles.reverse()
+    res = stockDataList
   })
-  .catch(() => {
-    firstRender.current = true
-    isFetch.current = false
-    alert("查詢條件錯誤")
-  });
-  await getNote(db, searchData, setNoteData)
-  await getStockinformation(setStockInformation, searchData.current.stockCode)
+  return res
 }
 
-async function getStockinformation(setStockInformation, stockCode) {
-  const res = await fetch('https://api.fugle.tw/realtime/v0.3/intraday/meta?symbolId=' + stockCode + '&apiToken=' + process.env.REACT_APP_FUGLE_API_KEY)
+async function getStockinformation(stockCode) {
+  let res = {}
+  await fetch('https://api.fugle.tw/realtime/v0.3/intraday/meta?symbolId=' + stockCode + '&apiToken=' + process.env.REACT_APP_FUGLE_API_KEY)
   .then((response) => response.json()) //2
   .then((qStockInformation) => {
-    setStockInformation(qStockInformation)
+    res = qStockInformation
   })
+  return res
 }
 
-async function getNote(db, searchData, setNoteData){
+async function getNote(db, searchData){
+  let noteObj = {}
   await db.ref('/note/' + searchData.current.stockCode ).on('value', (snapshot) => { 
-    let noteObj = {test:'test'}
     let startDate = new Date(searchData.current.startDate)
     let endDate = new Date(searchData.current.endDate)
     if(snapshot.exists()){
@@ -50,16 +45,15 @@ async function getNote(db, searchData, setNoteData){
         }
         startDate = new Date(startDate.getTime() + 24*60*60*1000)
       }
-      setNoteData(noteObj)
     }
     else{
       while(startDate <= endDate){
         noteObj[startDate.toISOString().slice(0, 10)] = ''
         startDate = new Date(startDate.getTime() + 24*60*60*1000)
       }
-      setNoteData(noteObj)
     }
   })
+  return noteObj
 }
 
 /*
@@ -85,8 +79,8 @@ async function getHolidaySchedule(setHolidaySchedule) {
 const Home = () => {
   const [stockData, setStockData] = useState([]);
   const [stockInformation, setStockInformation]= useState({});
-  const [capitalReductionData, setCapitalReductionData] = useState({});
-  const [holidaySchedule, setHolidaySchedule] = useState({});
+  //const [capitalReductionData, setCapitalReductionData] = useState({});
+  //const [holidaySchedule, setHolidaySchedule] = useState({});
   const user = useRef({});
   const firstRender = useRef(true)
   const isFetch = useRef(false)
@@ -105,15 +99,32 @@ const Home = () => {
   }
   var startDay = new Date(today.getTime() - 24*60*60*1000*5)
 
+  const fetchData = async () => {
+    var StockDataPromise = getStockData(searchData)
+    var stockInformationPromise = getStockinformation(searchData.current.stockCode);
+    var notePromise = getNote(database,searchData);
+  
+    await Promise.all([StockDataPromise, stockInformationPromise, notePromise])
+    .then(([stockData, stockInformation, note])=>{
+      setStockData(stockData)
+      setStockInformation(stockInformation)
+      setNoteData(note)
+      isFetch.current = true
+    })
+    .catch(() => {
+      firstRender.current = true
+      isFetch.current = false
+      alert("查詢條件錯誤")
+    })
+  }
+
   useEffect(() => {
     document.title = "rw-stockapp";  
   }, []);
 
   useEffect(() => {
     if(!firstRender){
-      fetchData(setStockData,setHolidaySchedule, setCapitalReductionData, searchData, database, setNoteData, setStockInformation, firstRender, isFetch).then(()=>{
-        isFetch.current = true
-      })
+      fetchData()
     }
   }, [searchData])
 
@@ -126,14 +137,11 @@ const Home = () => {
   }
 
   const quickSearchOnclick = async (e) =>{
-    console.log(e.target.value)
     let today = new Date()
     searchData.current.endDate = new Date().toISOString().slice(0,10)
     today.setMonth(today.getMonth() - e.target.value)
     today.setDate(today.getDate() + 1);
-    searchData.current.startDate = today.toISOString().slice(0,10);
-    
-    console.log(searchData.current)
+    searchData.current.startDate = today.toISOString().slice(0,10);    
   }
 
   const exportOnclick = (e) => {
@@ -151,8 +159,8 @@ const Home = () => {
     })
     console.log(excelData)
     sheet.addTable({
-      name: 'table名稱',  // 表格內看不到的，算是key值，讓你之後想要針對這個table去做額外設定的時候，可以指定到這個table
-      ref: 'A1', // 從A1開始
+      name: 'table名稱',
+      ref: 'A1',
       columns: [{name:'日期'},{name:'最高'},{name:'最低'},{name:'收盤'},{name:'備註/筆記'}],
       rows: excelData
     });
@@ -228,11 +236,7 @@ const Home = () => {
     event.preventDefault();
     firstRender.current = false
     isFetch.current = false
-    let button = event.target[3].value
-    console.log(button)
-    fetchData(setStockData,setHolidaySchedule, setCapitalReductionData, searchData, database, setNoteData, setStockInformation, firstRender, isFetch).then(()=>{
-      isFetch.current = true
-    })
+    fetchData()
   }
 
   const loginSubmit = event =>{
@@ -245,15 +249,15 @@ const Home = () => {
       user.current = userCredential.user
       firstRender.current = true
       setStockData({})
-      //searchData.current = {startDate:'2022-10-01', endDate:'2022-10-03', stockCode:'2330'}
-      //fetchData(setStockData,searchData, database, setNoteData)
     })
     .catch((error) => {
-      const errorCode = error.code;
       const errorMessage = error.message;
       alert(errorMessage)
     });
   }
+
+  var testFaovorite = [{'code':2330,'name':"台積電"},{'code':2884,'name':"環球晶"}]
+
   if(user.current === null){
     return(
       <div>
@@ -262,18 +266,18 @@ const Home = () => {
             <h1 className="col-auto">rw - stockapp</h1>
           </div>
           <div className="card">
-            <div class="card-body">
+            <div className="card-body">
               <form onSubmit={loginSubmit}>
-                <div class="form-row form-group">
+                <div className="form-row form-group">
                   <label className="col-3 col-form-label">Email:</label>
-                  <div class="col">
+                  <div className="col">
                     <input type="email" className="form-control" name="email"></input>
                   </div>
                 </div>
 
                 <div class="form-row form-group">
                   <label type="password" className="col-3 col-form-label">密碼:</label>
-                  <div class="col">
+                  <div className="col">
                     <input type="password" className="form-control" name="password"/>
                   </div>
                 </div>
@@ -291,14 +295,11 @@ const Home = () => {
       </div>
     )
   }
-  
+
   if(firstRender.current === true){
-    console.log(capitalReductionData)
-    console.log(holidaySchedule)
-    var testFaovorite = [{'code':2330,'name':"台積電"},{'code':2884,'name':"環球晶"}]
     return(
       <div>
-        <div className="px-2">
+        <div className="px-2 my-1">
           <div className="row justify-content-center">
               <h1 className="col-auto ">請輸入查詢資料</h1>
           </div>
@@ -332,7 +333,9 @@ const Home = () => {
               </form>
           </div>
         </div>
-        <FavoriteList favoriteData={testFaovorite}/>
+        <div className="mx-2">
+          <FavoriteList favoriteData={testFaovorite}/>
+        </div>
         <Footer/>
       </div>
     ) 
@@ -344,7 +347,6 @@ const Home = () => {
 
   var dataIndex = 0
   if(!firstRender.current){
-    console.log(stockData)
     return (
       <div>
         <div className="px-2">
@@ -352,7 +354,7 @@ const Home = () => {
               <h1 className="col-auto ">{stockData.symbolId}{stockInformation?.data.meta.nameZhTw}</h1>
           </div>
   
-          <div className="card">
+          <div className="card my-1">
             <div className="cardhead">
 
             </div>
@@ -384,6 +386,7 @@ const Home = () => {
               </div>
             </form>
           </div>
+          <FavoriteList favoriteData={testFaovorite}/>
           <div className="card my-2">
             <PriceChart stockData={stockData} stockInformation={stockInformation.data?.meta}/>
           </div>
@@ -448,7 +451,7 @@ const Home = () => {
                                   <input type="hidden" name="date" value={item.date}></input>
                                   <div className="input-group">
                                     <input onChange={handleNoteChange} type="text" name={item.date} className="w-auto form-control" value={noteData[item.date]}></input>
-                                    <span class="input-group-btn  px-2">
+                                    <span className="input-group-btn  px-2">
                                       <button type="submit" className="btn btn-primary">儲存筆記</button>
                                     </span>
                                   </div>
@@ -470,7 +473,7 @@ const Home = () => {
                                   <input type="hidden" name="date" value={item.date}></input>
                                   <div className="input-group">
                                     <input onChange={handleNoteChange} type="text" name={item.date} className="w-auto form-control" value={noteData[item.date]}></input>
-                                    <span class="input-group-btn px-2">
+                                    <span className="input-group-btn px-2">
                                       <button type="submit" className="btn btn-primary">儲存筆記</button>
                                     </span>
                                   </div>
@@ -479,9 +482,11 @@ const Home = () => {
                       </tr>
                   );
               })}
-              <td className="text-center" colSpan={5}>
-                <a name="buttom" href="#top" className="font-weight-bold">移至最上方</a>
-              </td>
+              <tr>
+                <td className="text-center" colSpan={5}>
+                  <a name="buttom" href="#top" className="font-weight-bold">移至最上方</a>
+                </td>
+              </tr>
               </tbody>
           </table>
         </div>

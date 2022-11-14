@@ -8,6 +8,7 @@ import PriceChart from "./component/PriceChart";
 import {signInWithEmailAndPassword } from "firebase/auth";
 import ExcelJs from "exceljs";
 import Footer from "./component/Footer"
+import FavoriteList from "./component/FavoriteList"
 
 
 
@@ -295,6 +296,7 @@ const Home = () => {
   if(firstRender.current === true){
     console.log(capitalReductionData)
     console.log(holidaySchedule)
+    var testFaovorite = [{'code':2330,'name':"台積電"},{'code':2884,'name':"環球晶"}]
     return(
       <div>
         <div className="px-2">
@@ -331,9 +333,8 @@ const Home = () => {
               </form>
           </div>
         </div>
-        <div className="fixed-bottom">
-          <Footer/>
-        </div>
+        <FavoriteList favoriteData={testFaovorite}/>
+        <Footer/>
       </div>
     ) 
   }

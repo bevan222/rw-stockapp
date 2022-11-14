@@ -100,7 +100,7 @@ const Home = () => {
   user.current = getAuth(firebaseDb).currentUser
 
   var today = new Date()
-  while(today.getDay() == 7 || today.getDay() == 6){
+  while(today.getDay() === 7 || today.getDay() === 6){
     today = new Date(today.getTime() - 24*60*60*1000)
   }
   var startDay = new Date(today.getTime() - 24*60*60*1000*5)
@@ -158,14 +158,14 @@ const Home = () => {
     });
     var lastRow = null
     sheet.eachRow(function(row, rowNumber){
-      if(lastRow == null ){
+      if(lastRow === null ){
         lastRow = row
       }
       row.eachCell( function(cell, colNumber){
         var date = new Date(row.getCell(1).value)
-        if(rowNumber > 1 && colNumber == 1){
+        if(rowNumber > 1 && colNumber === 1){
           console.log(date)
-          if(date.getDay() == 5){
+          if(date.getDay() === 5){
             row.getCell(1).font = {color: {argb: 'FF0000'}};
             row.getCell(1).value = row.getCell(1).value.slice(5,10).replaceAll('-','/')
           }else{
@@ -202,10 +202,10 @@ const Home = () => {
     let type = e.target[0].value
     let color = e.target[1].value
     
-    if(type == 'lessThan'){
+    if(type === 'lessThan'){
       setLessThanColor(color)
     }
-    else if(type == 'greaterOrEqual'){
+    else if(type === 'greaterOrEqual'){
       setGreaterOrEqualColor(color)
     }
   }
@@ -254,7 +254,7 @@ const Home = () => {
       alert(errorMessage)
     });
   }
-  if(user.current == null){
+  if(user.current === null){
     return(
       <div>
         <div class="col-md-8 col-lg-7 mx-auto px-2">
@@ -292,7 +292,7 @@ const Home = () => {
     )
   }
   
-  if(firstRender.current == true){
+  if(firstRender.current === true){
     console.log(capitalReductionData)
     console.log(holidaySchedule)
     return(
@@ -433,12 +433,12 @@ const Home = () => {
               <tbody>
               {stockData.candles?.map((item) => {
                   //const {id, name, address} = item;
-                  if(dataIndex == 0){
+                  if(dataIndex === 0){
                     dataIndex +=1 
                     var date = new Date(item.date)
                     return (
                       <tr key={item.date}>
-                          <td className="text-nowrap" style={{color: date.getDay() == 5 ? 'red':'green'}}>{item.date.slice(5,10).replaceAll('-','/')}</td>
+                          <td className="text-nowrap" style={{color: date.getDay() === 5 ? 'red':'green'}}>{item.date.slice(5,10).replaceAll('-','/')}</td>
                           <td>{item.high}</td>
                           <td>{item.low}</td>
                           <td>{item.close}</td>
@@ -460,7 +460,7 @@ const Home = () => {
                   dataIndex +=1 
                   return (
                       <tr key={item.date}>
-                          <td style={{color: date.getDay() == 5 ? 'red':'green'}}>{item.date.slice(5,10).replaceAll('-','/')}</td>
+                          <td style={{color: date.getDay() === 5 ? 'red':'green'}}>{item.date.slice(5,10).replaceAll('-','/')}</td>
                           <td style={{color: item.high >= stockData.candles[dataIndex-2].close ? greaterOrEqualColor:lessThanColor}}>{item.high}</td>
                           <td style={{color: item.low >= stockData.candles[dataIndex-2].close ? greaterOrEqualColor:lessThanColor}}>{item.low}</td>
                           <td style={{color: item.close >= stockData.candles[dataIndex-2].close ? greaterOrEqualColor:lessThanColor }}>{item.close}</td>

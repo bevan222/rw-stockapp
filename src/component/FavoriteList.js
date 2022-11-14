@@ -8,6 +8,7 @@ const favoriteList = ({favoriteData}) => {
                     <tr>
                         <th colSpan={5} className="text-center">
                             我的選股
+                            <a href="#buttom" className="mx-3 text-nowrap">移至最下方</a>
                         </th>
                     </tr>                
                     <tr>

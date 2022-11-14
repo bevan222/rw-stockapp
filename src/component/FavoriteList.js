@@ -1,14 +1,13 @@
 const favoriteList = ({favoriteData}) => {
-    console.log(favoriteData)
     return(
-    <div>
+    <div className="card my-1">
         <div name="top" className="col-12 p-2 table-responsive">
             <table className="table table-bordered table-sm table-hover">
                 <thead>
                     <tr>
                         <th colSpan={5} className="text-center">
                             我的選股
-                            <a href="#buttom" className="mx-3 text-nowrap">移至最下方</a>
+                            <a href="#favoriteButtom" className="mx-3 text-nowrap">移至最下方</a>
                         </th>
                     </tr>                
                     <tr>
@@ -30,9 +29,11 @@ const favoriteList = ({favoriteData}) => {
                             </tr>
                         );
                     })}
-                    <td className="text-center" colSpan={5}>
-                        <a name="buttom" href="#top" className="font-weight-bold">移至最上方</a>
-                    </td>
+                    <tr>
+                        <td className="text-center" colSpan={5}>
+                            <a name="favoriteButtom" href="#top" className="font-weight-bold">移至最上方</a>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>

@@ -467,11 +467,11 @@ const Home = () => {
               </tr>
               
               <tr>
-                  <th className="text-nowrap">日期</th>
-                  <th className="text-nowrap">最高</th>
-                  <th className="text-nowrap">最低</th>
-                  <th className="text-nowrap">收盤</th>
-                  <th className="text-nowrap">備註</th>
+                <th className="text-nowrap">日期</th>
+                <th className="text-nowrap">最高</th>
+                <th className="text-nowrap">最低</th>
+                <th className="text-nowrap">收盤</th>
+                <th className="text-nowrap">備註</th>
               </tr>
               </thead>
               <tbody>
@@ -487,15 +487,15 @@ const Home = () => {
                           <td>{item.low}</td>
                           <td>{item.close}</td>
                           <td>
-                              <form onSubmit={noteSubmit} className="text-nowrap form-inline">
-                                  <input type="hidden" name="date" value={item.date}></input>
-                                  <div className="input-group">
-                                    <input onChange={handleNoteChange} type="text" name={item.date} className="w-auto form-control" value={noteData[item.date]}></input>
-                                    <span className="input-group-btn  px-2">
-                                      <button type="submit" className="btn btn-primary">儲存筆記</button>
-                                    </span>
-                                  </div>
-                              </form>
+                            <form onSubmit={noteSubmit} className="text-nowrap form-inline">
+                                <input type="hidden" name="date" value={item.date}></input>
+                                <div className="input-group">
+                                  <input onChange={handleNoteChange} type="text" name={item.date} className="w-auto form-control" value={noteData[item.date]}></input>
+                                  <span className="input-group-btn  px-2">
+                                    <button type="submit" className="btn btn-primary">儲存筆記</button>
+                                  </span>
+                                </div>
+                            </form>
                           </td>
                       </tr>
                     );
@@ -509,15 +509,15 @@ const Home = () => {
                           <td style={{color: item.low >= stockData.candles[dataIndex-2].close ? greaterOrEqualColor:lessThanColor}}>{item.low}</td>
                           <td style={{color: item.close >= stockData.candles[dataIndex-2].close ? greaterOrEqualColor:lessThanColor }}>{item.close}</td>
                           <td>
-                              <form onSubmit={noteSubmit} className="text-nowrap form-inline">
-                                  <input type="hidden" name="date" value={item.date}></input>
-                                  <div className="input-group">
-                                    <input onChange={handleNoteChange} type="text" name={item.date} className="w-auto form-control" value={noteData[item.date]}></input>
-                                    <span className="input-group-btn px-2">
-                                      <button type="submit" className="btn btn-primary">儲存筆記</button>
-                                    </span>
-                                  </div>
-                              </form> 
+                            <form onSubmit={noteSubmit} className="text-nowrap form-inline">
+                                <input type="hidden" name="date" value={item.date}></input>
+                                <div className="input-group">
+                                  <input onChange={handleNoteChange} type="text" name={item.date} className="w-auto form-control" value={noteData[item.date]}></input>
+                                  <span className="input-group-btn px-2">
+                                    <button type="submit" className="btn btn-primary">儲存筆記</button>
+                                  </span>
+                                </div>
+                            </form> 
                           </td>
                       </tr>
                   );

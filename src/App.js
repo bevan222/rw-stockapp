@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import firebase from 'firebase/compat/app';
 import { getAuth } from "firebase/auth";
-import "firebase/compat/database";
+import firebase from 'firebase/compat/app';
 import firebaseConfig from '../src/component/firebaseConfig';
+import "firebase/compat/database";
 import PriceChart from "./component/PriceChart";
 import {signInWithEmailAndPassword } from "firebase/auth";
 import ExcelJs from "exceljs";
@@ -56,6 +56,18 @@ async function getNote(db, searchData){
   return noteObj
 }
 
+async function getFavorite(db){
+  let favoriteList = {}
+  await db.ref('/favorite').on('value', (snapshot) => { 
+    if(snapshot.exists()){
+      favoriteList = snapshot.val()
+    }
+  })
+  console.log(favoriteList)
+  return favoriteList
+}
+
+
 /*
 async function getCapitalReductionData(setCapitalReductionData) {
   const res = await fetch('https://www.twse.com.tw/exchangeReport/TWTAVU?response=json&date=undefined&selectType=undefined')
@@ -85,6 +97,7 @@ const Home = () => {
   const firstRender = useRef(true)
   const isFetch = useRef(false)
   const [noteData, setNoteData] = useState({})
+  const [favoriteData, setFavoriteData] = useState({})
   const [lessThanColor, setLessThanColor] = useState('#000000')
   const [greaterOrEqualColor, setGreaterOrEqualColor] = useState('#0000ff')
   const firebaseDb = firebase.initializeApp(firebaseConfig)
@@ -99,17 +112,25 @@ const Home = () => {
   }
   var startDay = new Date(today.getTime() - 24*60*60*1000*5)
 
+  const fetchFavorite = async () => {
+    var favoritePromise = getFavorite(database)
+    setFavoriteData(await favoritePromise)
+  }
+
   const fetchData = async () => {
     var StockDataPromise = getStockData(searchData)
     var stockInformationPromise = getStockinformation(searchData.current.stockCode);
     var notePromise = getNote(database,searchData);
+    var favoritePromise = getFavorite(database)
   
-    await Promise.all([StockDataPromise, stockInformationPromise, notePromise])
-    .then(([stockData, stockInformation, note])=>{
+    await Promise.all([StockDataPromise, stockInformationPromise, notePromise, favoritePromise])
+    .then(([stockData, stockInformation, note, favorite])=>{
       setStockData(stockData)
       setStockInformation(stockInformation)
       setNoteData(note)
+      setFavoriteData(favorite)
       isFetch.current = true
+      firstRender.current = false
     })
     .catch(() => {
       firstRender.current = true
@@ -119,8 +140,12 @@ const Home = () => {
   }
 
   useEffect(() => {
-    document.title = "rw-stockapp";  
+    document.title = "rw-stockapp";
   }, []);
+
+  useEffect(() => {
+    fetchFavorite()
+  }, [user.current]);
 
   useEffect(() => {
     if(!firstRender){
@@ -217,8 +242,21 @@ const Home = () => {
       setGreaterOrEqualColor(color)
     }
   }
+
+  const favoriteAddSubmit = async (e) => {
+    e.preventDefault();
+    let updateData = {}
+    updateData[stockData.symbolId] = stockInformation?.data.meta.nameZhTw 
+    await database.ref('/favorite').update(updateData).then(() => {
+      alert("新增成功")
+      fetchFavorite()
+    })
+    .catch(() => {
+      alert("新增失敗")
+    });
+  }
   
-  const fireBaseSubmit = async (e) => {
+  const noteSubmit = async (e) => {
     e.preventDefault();
     let date = e.target[0].value
     let note = e.target[1].value
@@ -257,6 +295,8 @@ const Home = () => {
   }
 
   var testFaovorite = [{'code':2330,'name':"台積電"},{'code':2884,'name':"環球晶"}]
+
+  console.log(stockData)
 
   if(user.current === null){
     return(
@@ -334,7 +374,7 @@ const Home = () => {
           </div>
         </div>
         <div className="mx-2">
-          <FavoriteList favoriteData={testFaovorite}/>
+          <FavoriteList favoriteData={favoriteData} fetchFavorite={fetchFavorite} searchData={searchData} fetchData={fetchData}/>
         </div>
         <Footer/>
       </div>
@@ -351,7 +391,7 @@ const Home = () => {
       <div>
         <div className="px-2">
           <div className="row justify-content-center">
-              <h1 className="col-auto ">{stockData.symbolId}{stockInformation?.data.meta.nameZhTw}</h1>
+              <h1 className="col-auto ">{stockData.symbolId}{stockInformation?.data.meta.nameZhTw} <button style={{display: stockData.symbolId in favoriteData ? 'none':''}} onClick={favoriteAddSubmit} className="btn btn-primary">加入最愛</button></h1>
           </div>
   
           <div className="card my-1">
@@ -386,7 +426,7 @@ const Home = () => {
               </div>
             </form>
           </div>
-          <FavoriteList favoriteData={testFaovorite}/>
+          <FavoriteList favoriteData={favoriteData} fetchFavorite={fetchFavorite} searchData={searchData} fetchData={fetchData}/>
           <div className="card my-2">
             <PriceChart stockData={stockData} stockInformation={stockInformation.data?.meta}/>
           </div>
@@ -447,7 +487,7 @@ const Home = () => {
                           <td>{item.low}</td>
                           <td>{item.close}</td>
                           <td>
-                              <form onSubmit={fireBaseSubmit} className="text-nowrap form-inline">
+                              <form onSubmit={noteSubmit} className="text-nowrap form-inline">
                                   <input type="hidden" name="date" value={item.date}></input>
                                   <div className="input-group">
                                     <input onChange={handleNoteChange} type="text" name={item.date} className="w-auto form-control" value={noteData[item.date]}></input>
@@ -469,7 +509,7 @@ const Home = () => {
                           <td style={{color: item.low >= stockData.candles[dataIndex-2].close ? greaterOrEqualColor:lessThanColor}}>{item.low}</td>
                           <td style={{color: item.close >= stockData.candles[dataIndex-2].close ? greaterOrEqualColor:lessThanColor }}>{item.close}</td>
                           <td>
-                              <form onSubmit={fireBaseSubmit} className="text-nowrap form-inline">
+                              <form onSubmit={noteSubmit} className="text-nowrap form-inline">
                                   <input type="hidden" name="date" value={item.date}></input>
                                   <div className="input-group">
                                     <input onChange={handleNoteChange} type="text" name={item.date} className="w-auto form-control" value={noteData[item.date]}></input>

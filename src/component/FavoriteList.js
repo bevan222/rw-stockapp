@@ -58,12 +58,12 @@ const FavoriteList = ({favoriteData, fetchFavorite, searchData, fetchData}) => {
                             <tr key={item.code}>
                                 <td>{item.code}</td>
                                 <td>{item.name}</td>
-                                <td className="w-1">
-                                    <form onSubmit={favoriteSearchSubmit} className="text-nowrap form-inline">
+                                <td className="" style={{width:  '5%'}}>
+                                    <form onSubmit={favoriteSearchSubmit} className="text-nowrap py-1">
                                         <input type="hidden" name="goFavoriteCode" value={item.code}></input>
                                         <button className="btn btn-primary mx-1">前往</button>
                                     </form>
-                                    <form onSubmit={favoriteDeleteSubmit} className="text-nowrap form-inline">
+                                    <form onSubmit={favoriteDeleteSubmit} className="text-nowrap py-1">
                                         <input type="hidden" name="deleteFavoriteCode" value={item.code}></input>
                                         <button type="submit" className="btn btn-danger mx-1">刪除</button>
                                     </form> 

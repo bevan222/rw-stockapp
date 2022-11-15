@@ -42,7 +42,7 @@ const FavoriteList = ({favoriteData, fetchFavorite, searchData, fetchData}) => {
     }
 
     return(
-    <div className="card my-1">
+    <div className="card my-2">
         <Button
             className="w-25 btn btn-secondary m-2"
             onClick={() => setFavoriteOpen(!favoriteOpen)}

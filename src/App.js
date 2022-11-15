@@ -422,7 +422,10 @@ const Home = () => {
                   <label className="col-3 col-md-2 col-form-label ">結束時間: </label>
                   <input name="endDate" className="form-control w-auto" type="date" onChange={handleSearchChange}></input>
                 </div>
-                <button type="submit" className="btn btn-primary my-2">區間查詢股票代碼</button>
+                <button type="submit" className="btn btn-primary my-2">區間查詢股票代碼</button>                  
+                <div className="d-flex justify-content-end bd-highlight mb-3">
+                  <a href="#buttom" className="mx-3 text-nowrap">移至最下方</a>
+                </div>
               </div>
             </form>
           </div>
@@ -458,10 +461,7 @@ const Home = () => {
                 <th colSpan={5} className="text-center">
                   <div>
                     {stockData.symbolId + stockInformation.data.meta.nameZhTw + ' ' + searchData.current.startDate.replaceAll('-','/') + '~' + searchData.current.endDate.replaceAll('-','/')} 
-                  </div>
-                  <div>
                     <button className=" mx-3 btn btn-secondary" onClick={exportOnclick}>匯出表格</button>
-                    <a href="#buttom" className="mx-3 text-nowrap">移至最下方</a>
                   </div>
                 </th>
               </tr>

@@ -63,19 +63,23 @@ async function getFavorite(db){
       favoriteList = snapshot.val()
     }
   })
-  console.log(favoriteList)
   return favoriteList
 }
 
 
 /*
-async function getCapitalReductionData(setCapitalReductionData) {
-  const res = await fetch('https://www.twse.com.tw/exchangeReport/TWTAVU?response=json&date=undefined&selectType=undefined')
+async function getCapitalReductionData() {
+  let res = {}
+  await fetch('https://www.twse.com.tw/exchangeReport/TWTAVU?response=json&date=undefined&selectType=undefined')
   .then((response) => response.json())
   .then((capitalReductionData) => {
     console.log(capitalReductionData)
-    setCapitalReductionData(capitalReductionData)
+    res = capitalReductionData
   })
+  .catch(()=>{
+    res = {}
+  })
+  return res
 }
 
 async function getHolidaySchedule(setHolidaySchedule) {
@@ -122,6 +126,7 @@ const Home = () => {
     var stockInformationPromise = getStockinformation(searchData.current.stockCode);
     var notePromise = getNote(database,searchData);
     var favoritePromise = getFavorite(database)
+    //var capitalReductionPromise = getCapitalReductionData()
   
     await Promise.all([StockDataPromise, stockInformationPromise, notePromise, favoritePromise])
     .then(([stockData, stockInformation, note, favorite])=>{
@@ -129,6 +134,7 @@ const Home = () => {
       setStockInformation(stockInformation)
       setNoteData(note)
       setFavoriteData(favorite)
+      //setCapitalReductionData(capitalReduction)
       isFetch.current = true
       firstRender.current = false
     })
@@ -182,7 +188,7 @@ const Home = () => {
       excelRow[4] = noteData[item.date]
       excelData.push(excelRow)
     })
-    console.log(excelData)
+
     sheet.addTable({
       name: 'table名稱',
       ref: 'A1',
@@ -197,7 +203,6 @@ const Home = () => {
       row.eachCell( function(cell, colNumber){
         var date = new Date(row.getCell(1).value)
         if(rowNumber > 1 && colNumber === 1){
-          console.log(date)
           if(date.getDay() === 5){
             row.getCell(1).font = {color: {argb: 'FF0000'}};
             row.getCell(1).value = row.getCell(1).value.slice(5,10).replaceAll('-','/')
@@ -293,10 +298,6 @@ const Home = () => {
       alert(errorMessage)
     });
   }
-
-  var testFaovorite = [{'code':2330,'name':"台積電"},{'code':2884,'name':"環球晶"}]
-
-  console.log(stockData)
 
   if(user.current === null){
     return(

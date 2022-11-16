@@ -8,6 +8,7 @@ import PriceChart from "./component/PriceChart";
 import {signInWithEmailAndPassword } from "firebase/auth";
 import ExcelJs from "exceljs";
 import Footer from "./component/Footer"
+import NavBar from "./component/NavBar"
 import FavoriteList from "./component/FavoriteList"
 
 async function getStockData(searchData) {
@@ -242,9 +243,11 @@ const Home = () => {
     
     if(type === 'lessThan'){
       setLessThanColor(color)
+      alert('設定成功')
     }
     else if(type === 'greaterOrEqual'){
       setGreaterOrEqualColor(color)
+      alert('設定成功')
     }
   }
 
@@ -340,6 +343,7 @@ const Home = () => {
   if(firstRender.current === true){
     return(
       <div>
+        <NavBar/>
         <div className="px-2 my-1">
           <div className="row justify-content-center">
               <h1 className="col-auto ">請輸入查詢資料</h1>
@@ -390,6 +394,7 @@ const Home = () => {
   if(!firstRender.current){
     return (
       <div>
+        <NavBar/>
         <div className="px-2">
           <div className="row justify-content-center">
               <h1 className="col-auto ">{stockData.symbolId}{stockInformation?.data.meta.nameZhTw} <button style={{display: stockData.symbolId in favoriteData ? 'none':''}} onClick={favoriteAddSubmit} className="btn btn-primary">加入最愛</button></h1>

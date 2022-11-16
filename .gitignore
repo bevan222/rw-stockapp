@@ -3,3 +3,5 @@ firebaserc
 env.local
 firebase
 src/component/firebaseConfig.js
+package-lock.json
+yarn.lock

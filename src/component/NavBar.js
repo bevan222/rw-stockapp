@@ -12,13 +12,13 @@ const NavBar = () => {
             <Button
                 className="m-2 navbar-toggler"
                 onClick={() => setNavbarItemOpen(!navbarItemOpen)}
-                aria-controls="collapse-favorite-table"
+                aria-controls="navbarList"
                 aria-expanded={navbarItemOpen}
             >
                 <span className="navbar-toggler-icon"></span>
             </Button>
             <Collapse in={navbarItemOpen}>
-                <div className="collapse navbar-collapse" id="navbarItem">
+                <div className="navbar-collapse" id="navbarList">
                     <ul className="navbar-nav mr-auto">
                         <li className="nav-item">
                             <a className="nav-link" target="_blank" href="https://www.twse.com.tw/zh/holidaySchedule/holidaySchedule">市場開休市</a>

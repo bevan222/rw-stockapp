@@ -58,13 +58,6 @@ const FavoriteList = ({favoriteData, fetchFavorite, searchData, fetchData}) => {
             <div id="collapse-favorite-table">
                 <div name="top" className="col-12 col-md-6 mx-auto p-2 table-responsive">
                     <table className="table table-bordered table-sm table-hover">
-                        <thead>
-                            <tr>
-                                <th colSpan={5} className="text-center">
-                                    我的選股
-                                </th>
-                            </tr>                
-                        </thead>
                         <tbody>
                             {favoriteDataArray?.map((item) => {
                                 return (

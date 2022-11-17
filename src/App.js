@@ -109,6 +109,7 @@ const Home = () => {
   const database = firebaseDb.database()
   const searchData = useRef({startDate:'', endDate:'', stockCode:''})
   const auth = getAuth(firebaseDb)
+  const bottomRef = useRef(null);
   user.current = getAuth(firebaseDb).currentUser
 
   var today = new Date()
@@ -159,6 +160,11 @@ const Home = () => {
       fetchData()
     }
   }, [searchData])
+
+  useEffect(() => {
+    // 👇️ scroll to bottom every time messages change
+    bottomRef.current?.scrollIntoView({behavior: 'smooth'});
+  }, [stockData]);
 
   const handleNoteChange = (e) => {
     setNoteData(prev=>({...prev, [e.target.name]: e.target.value}))
@@ -533,6 +539,7 @@ const Home = () => {
         <div className="d-flex justify-content-end bd-highlight mb-3">
             <a name="buttom" href="#top" className="mx-3 text-nowrap">移至最上方</a>
         </div>
+        <div ref={bottomRef} />
         <Footer/>
       </div>
     );

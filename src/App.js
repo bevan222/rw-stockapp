@@ -528,13 +528,14 @@ const Home = () => {
                       </tr>
                   );
               })}
-              <tr>
-                <td className="text-center" colSpan={5}>
-                  <a name="buttom" href="#top" className="font-weight-bold">移至最上方</a>
-                </td>
-              </tr>
               </tbody>
           </table>
+        </div>
+        <div className="d-flex justify-content-end bd-highlight mb-3">
+            <a href="#top" className="mx-3 text-nowrap">移至最上方</a>
+        </div>
+        <div className="d-flex justify-content-end bd-highlight mb-3">
+            <a href="#buttom" className="mx-3 text-nowrap">移至最下方</a>
         </div>
         <Footer/>
       </div>

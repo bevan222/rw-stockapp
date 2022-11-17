@@ -531,10 +531,7 @@ const Home = () => {
           </table>
         </div>
         <div className="d-flex justify-content-end bd-highlight mb-3">
-            <a href="#top" className="mx-3 text-nowrap">移至最上方</a>
-        </div>
-        <div className="d-flex justify-content-end bd-highlight mb-3">
-            <a href="#buttom" className="mx-3 text-nowrap">移至最下方</a>
+            <a name="buttom" href="#top" className="mx-3 text-nowrap">移至最上方</a>
         </div>
         <Footer/>
       </div>

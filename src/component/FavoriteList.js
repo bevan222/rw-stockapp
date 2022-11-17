@@ -43,18 +43,20 @@ const FavoriteList = ({favoriteData, fetchFavorite, searchData, fetchData}) => {
 
     return(
     <div className="card my-2">
-        <Button
-            className="w-25 btn btn-secondary m-2"
-            onClick={() => setFavoriteOpen(!favoriteOpen)}
-            aria-controls="collapse-favorite-table"
-            aria-expanded={favoriteOpen}
-        >
-            我的選股
-        {favoriteOpen ? <FontAwesomeIcon icon={faCaretUp} className="px-2"/> : <FontAwesomeIcon icon={faCaretDown} className="px-2"/>}
-        </Button>
+        <div className='d-flex justify-content-center'>
+            <Button
+                className="btn btn-secondary m-2"
+                onClick={() => setFavoriteOpen(!favoriteOpen)}
+                aria-controls="collapse-favorite-table"
+                aria-expanded={favoriteOpen}
+            >
+                我的選股
+            {favoriteOpen ? <FontAwesomeIcon icon={faCaretUp} className="px-2"/> : <FontAwesomeIcon icon={faCaretDown} className="px-2"/>}
+            </Button>
+        </div>
         <Collapse in={favoriteOpen}>
             <div id="collapse-favorite-table">
-                <div name="top" className="col-12 p-2 table-responsive">
+                <div name="top" className="col-12 col-md-6 mx-auto p-2 table-responsive">
                     <table className="table table-bordered table-sm table-hover">
                         <thead>
                             <tr>
@@ -62,27 +64,34 @@ const FavoriteList = ({favoriteData, fetchFavorite, searchData, fetchData}) => {
                                     我的選股
                                 </th>
                             </tr>                
-                            <tr>
-                                <th className="text-nowrap">股票代碼</th>
-                                <th className="text-nowrap">名稱</th>
-                                <th className="text-nowrap">功能</th>
-                            </tr>
                         </thead>
                         <tbody>
                             {favoriteDataArray?.map((item) => {
                                 return (
                                     <tr key={item.code}>
-                                        <td>{item.code}</td>
-                                        <td>{item.name}</td>
-                                        <td className="" style={{width:  '5%'}}>
-                                            <form onSubmit={favoriteSearchSubmit} className="text-nowrap py-1">
-                                                <input type="hidden" name="goFavoriteCode" value={item.code}></input>
-                                                <button className="btn btn-primary mx-1">前往</button>
-                                            </form>
-                                            <form onSubmit={favoriteDeleteSubmit} className="text-nowrap py-1">
-                                                <input type="hidden" name="deleteFavoriteCode" value={item.code}></input>
-                                                <button type="submit" className="btn btn-danger mx-1">刪除</button>
-                                            </form> 
+                                        <td>
+                                            <div style={{display:'flex'}}>
+                                                <form onSubmit={favoriteSearchSubmit} className="text-nowrap py-1">
+                                                    <input type="hidden" name="goFavoriteCode" value={item.code}></input>
+                                                    <button type="submit" className="btn btn-light link-secondary">{item.code} - {item.name}</button>
+                                                </form>
+                                                <form onSubmit={favoriteDeleteSubmit} className="text-nowrap py-1">
+                                                    <input type="hidden" name="deleteFavoriteCode" value={item.code}></input>
+                                                    <button type="submit" className="btn btn-danger btn-sm">刪除</button>
+                                                </form> 
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div style={{display:'flex'}}>
+                                                <form onSubmit={favoriteSearchSubmit} className="text-nowrap py-1">
+                                                    <input type="hidden" name="goFavoriteCode" value={item.code}></input>
+                                                    <button type="submit" className="btn btn-light link-secondary">{item.code} - {item.name}</button>
+                                                </form>
+                                                <form onSubmit={favoriteDeleteSubmit} className="text-nowrap py-1">
+                                                    <input type="hidden" name="deleteFavoriteCode" value={item.code}></input>
+                                                    <button type="submit" className="btn btn-danger btn-sm">刪除</button>
+                                                </form> 
+                                            </div>
                                         </td>
                                     </tr>
                                 );

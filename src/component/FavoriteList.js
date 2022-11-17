@@ -59,12 +59,12 @@ const FavoriteList = ({favoriteData, fetchFavorite, searchData, fetchData}) => {
         </div>
         <Collapse in={favoriteOpen}>
             <div id="collapse-favorite-table">
-                <div name="top" className="col-12 col-md-6 mx-auto p-2 table-responsive">
+                <div name="top" className="col-12 col-md-8 mx-auto p-2 table-responsive">
                     <table className="table table-bordered table-sm table-hover">
                         <tbody>
                             {favoriteDataArray?.map((item) => {
                                 return (
-                                    <tr>
+                                    <tr key={item[0].code}>
                                         <td>
                                             {item[0] != undefined ? 
                                             <div style={{display:'flex'}}>

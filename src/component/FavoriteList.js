@@ -11,9 +11,14 @@ const FavoriteList = ({favoriteData, fetchFavorite, searchData, fetchData}) => {
     const firebaseDb = firebase.initializeApp(firebaseConfig)
     const database = firebaseDb.database()
 
-    let favoriteDataArray = []
+    var tempFavoriteDataArray = []
+    var favoriteDataArray = []
     for (const [key, value] of Object.entries(favoriteData)) {
-        favoriteDataArray.push({'code': key, 'name': value})
+        tempFavoriteDataArray.push({'code': key, 'name': value})
+    }
+
+    for(let i = 0 ; i < parseInt(tempFavoriteDataArray.length/2 + (tempFavoriteDataArray.length%2 == 0 ? 0 : 1)) ; i++){
+        favoriteDataArray.push([tempFavoriteDataArray[i*2],tempFavoriteDataArray[i*2+1]])
     }
 
     const favoriteDeleteSubmit = async (e) => {
@@ -61,30 +66,34 @@ const FavoriteList = ({favoriteData, fetchFavorite, searchData, fetchData}) => {
                         <tbody>
                             {favoriteDataArray?.map((item) => {
                                 return (
-                                    <tr key={item.code}>
+                                    <tr>
                                         <td>
+                                            {item[0] != undefined ? 
                                             <div style={{display:'flex'}}>
                                                 <form onSubmit={favoriteSearchSubmit} className="text-nowrap py-1">
-                                                    <input type="hidden" name="goFavoriteCode" value={item.code}></input>
-                                                    <button type="submit" className="btn btn-light link-secondary">{item.code} - {item.name}</button>
+                                                    <input type="hidden" name="goFavoriteCode" value={item[0]?.code}></input>
+                                                    <button type="submit" className="btn btn-light link-secondary">{item[0]?.code} - {item[0]?.name}</button>
                                                 </form>
                                                 <form onSubmit={favoriteDeleteSubmit} className="text-nowrap py-1">
-                                                    <input type="hidden" name="deleteFavoriteCode" value={item.code}></input>
+                                                    <input type="hidden" name="deleteFavoriteCode" value={item[0]?.code}></input>
                                                     <button type="submit" className="btn btn-danger btn-sm">刪除</button>
                                                 </form> 
-                                            </div>
+                                            </div> : <div></div>
+                                            }
                                         </td>
                                         <td>
+                                            {item[1] != undefined ? 
                                             <div style={{display:'flex'}}>
                                                 <form onSubmit={favoriteSearchSubmit} className="text-nowrap py-1">
-                                                    <input type="hidden" name="goFavoriteCode" value={item.code}></input>
-                                                    <button type="submit" className="btn btn-light link-secondary">{item.code} - {item.name}</button>
+                                                    <input type="hidden" name="goFavoriteCode" value={item[1]?.code}></input>
+                                                    <button type="submit" className="btn btn-light link-secondary">{item[1]?.code} - {item[1]?.name}</button>
                                                 </form>
                                                 <form onSubmit={favoriteDeleteSubmit} className="text-nowrap py-1">
-                                                    <input type="hidden" name="deleteFavoriteCode" value={item.code}></input>
+                                                    <input type="hidden" name="deleteFavoriteCode" value={item[1]?.code}></input>
                                                     <button type="submit" className="btn btn-danger btn-sm">刪除</button>
                                                 </form> 
-                                            </div>
+                                            </div> : <div></div>
+                                            }
                                         </td>
                                     </tr>
                                 );

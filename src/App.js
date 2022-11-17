@@ -256,7 +256,6 @@ const Home = () => {
     let updateData = {}
     updateData[stockData.symbolId] = stockInformation?.data.meta.nameZhTw 
     await database.ref('/favorite').update(updateData).then(() => {
-      alert("新增成功")
       fetchFavorite()
     })
     .catch(() => {

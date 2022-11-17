@@ -25,7 +25,6 @@ const FavoriteList = ({favoriteData, fetchFavorite, searchData, fetchData}) => {
         e.preventDefault();
         let deleteCode = e.target[0].value
         await database.ref('/favorite').child(deleteCode).remove().then(() => {
-          alert("刪除成功")
           fetchFavorite()
         })
         .catch(() => {
@@ -43,7 +42,6 @@ const FavoriteList = ({favoriteData, fetchFavorite, searchData, fetchData}) => {
         searchData.current.startDate = today.toISOString().slice(0,10);
         console.log(searchData)
         fetchData()
-        alert('搜尋成功')
     }
 
     return(

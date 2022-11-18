@@ -249,11 +249,9 @@ const Home = () => {
     
     if(type === 'lessThan'){
       setLessThanColor(color)
-      alert('設定成功')
     }
     else if(type === 'greaterOrEqual'){
       setGreaterOrEqualColor(color)
-      alert('設定成功')
     }
   }
 
@@ -276,7 +274,6 @@ const Home = () => {
     var updateData = {}
     updateData[date] = note
     await database.ref('/note/' + stockData.symbolId ).update(updateData).then(() => {
-      alert("儲存成功")
     })
     .catch(() => {
       alert("儲存失敗")
@@ -296,14 +293,12 @@ const Home = () => {
     let password = event.target[1].value
     signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      alert("登入成功")
       user.current = userCredential.user
       firstRender.current = true
       setStockData({})
     })
     .catch((error) => {
-      const errorMessage = error.message;
-      alert(errorMessage)
+      alert("登入失敗請確認帳號密碼")
     });
   }
 

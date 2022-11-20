@@ -17,7 +17,7 @@ const FavoriteList = ({favoriteData, fetchFavorite, searchData, fetchData}) => {
         tempFavoriteDataArray.push({'code': key, 'name': value})
     }
 
-    for(let i = 0 ; i < parseInt(tempFavoriteDataArray.length/2 + (tempFavoriteDataArray.length%2 == 0 ? 0 : 1)) ; i++){
+    for(let i = 0 ; i < parseInt(tempFavoriteDataArray.length/2 + (tempFavoriteDataArray.length%2 === 0 ? 0 : 1)) ; i++){
         favoriteDataArray.push([tempFavoriteDataArray[i*2],tempFavoriteDataArray[i*2+1]])
     }
 
@@ -66,7 +66,7 @@ const FavoriteList = ({favoriteData, fetchFavorite, searchData, fetchData}) => {
                                 return (
                                     <tr key={item[0].code}>
                                         <td>
-                                            {item[0] != undefined ? 
+                                            {item[0] !== undefined ? 
                                             <div style={{display:'flex'}}>
                                                 <form onSubmit={favoriteSearchSubmit} className="text-nowrap py-1">
                                                     <input type="hidden" name="goFavoriteCode" value={item[0]?.code}></input>
@@ -80,7 +80,7 @@ const FavoriteList = ({favoriteData, fetchFavorite, searchData, fetchData}) => {
                                             }
                                         </td>
                                         <td>
-                                            {item[1] != undefined ? 
+                                            {item[1] !== undefined ? 
                                             <div style={{display:'flex'}}>
                                                 <form onSubmit={favoriteSearchSubmit} className="text-nowrap py-1">
                                                     <input type="hidden" name="goFavoriteCode" value={item[1]?.code}></input>

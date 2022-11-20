@@ -358,7 +358,7 @@ const Home = () => {
     return(
       <div>
         <NavBar/>
-        <div className="px-2 my-1">
+        <div className="px-2 pt-2">
           <div className="row justify-content-center">
               <h1 className="col-auto ">請輸入查詢資料</h1>
           </div>
@@ -408,7 +408,7 @@ const Home = () => {
     return (
       <div>
         <NavBar/>
-        <div className="px-2">
+        <div className="px-2 pt-2">
           <div className="row justify-content-center">
               <h1 className="col-auto ">{stockData.symbolId}{stockInformation?.data.meta.nameZhTw} <button style={{display: stockData.symbolId in favoriteData ? 'none':''}} onClick={favoriteAddSubmit} className="btn btn-primary">加入最愛</button></h1>
           </div>

@@ -6,7 +6,7 @@ import Collapse from 'react-bootstrap/Collapse';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons'
 
-const FavoriteList = ({favoriteData, fetchFavorite, searchData, fetchData}) => {
+const FavoriteList = ({favoriteData, fetchFavorite, searchData, fetchData, user}) => {
     const [favoriteOpen, setFavoriteOpen] = useState(false);
     const firebaseDb = firebase.initializeApp(firebaseConfig)
     const database = firebaseDb.database()
@@ -24,7 +24,7 @@ const FavoriteList = ({favoriteData, fetchFavorite, searchData, fetchData}) => {
     const favoriteDeleteSubmit = async (e) => {
         e.preventDefault();
         let deleteCode = e.target[0].value
-        await database.ref('/favorite').child(deleteCode).remove().then(() => {
+        await database.ref('/' + user.current.uid + '/favorite').child(deleteCode).remove().then(() => {
           fetchFavorite()
         })
         .catch(() => {
@@ -40,7 +40,6 @@ const FavoriteList = ({favoriteData, fetchFavorite, searchData, fetchData}) => {
         today.setMonth(today.getMonth() - 3)
         today.setDate(today.getDate() + 1);
         searchData.current.startDate = today.toISOString().slice(0,10);
-        console.log(searchData)
         fetchData()
     }
 

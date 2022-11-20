@@ -32,38 +32,52 @@ async function getStockinformation(stockCode) {
   return res
 }
 
-async function getNote(db, searchData){
+async function getNote(db, searchData, user){
   let noteObj = {}
-  await db.ref('/note/' + searchData.current.stockCode ).on('value', (snapshot) => { 
-    let startDate = new Date(searchData.current.startDate)
-    let endDate = new Date(searchData.current.endDate)
-    if(snapshot.exists()){
-      while(startDate <= endDate){
-        if(snapshot.val().hasOwnProperty(startDate.toISOString().slice(0, 10))){
-          noteObj[startDate.toISOString().slice(0, 10)] = snapshot.val()[startDate.toISOString().slice(0, 10)]  
-        }else{
-          noteObj[startDate.toISOString().slice(0, 10)] = ''
+  if(user.current){
+    return new Promise((resolve, reject) => {
+      db.ref('/' + user.current.uid + '/note/' + searchData.current.stockCode ).on('value', (snapshot) => { 
+        let startDate = new Date(searchData.current.startDate)
+        let endDate = new Date(searchData.current.endDate)
+        if(snapshot.exists()){
+          while(startDate <= endDate){
+            if(snapshot.val().hasOwnProperty(startDate.toISOString().slice(0, 10))){
+              noteObj[startDate.toISOString().slice(0, 10)] = snapshot.val()[startDate.toISOString().slice(0, 10)]  
+            }else{
+              noteObj[startDate.toISOString().slice(0, 10)] = ''
+            }
+            startDate = new Date(startDate.getTime() + 24*60*60*1000)
+          }
+          resolve(noteObj)
         }
-        startDate = new Date(startDate.getTime() + 24*60*60*1000)
-      }
-    }
-    else{
-      while(startDate <= endDate){
-        noteObj[startDate.toISOString().slice(0, 10)] = ''
-        startDate = new Date(startDate.getTime() + 24*60*60*1000)
-      }
-    }
-  })
+        else{
+          while(startDate <= endDate){
+            noteObj[startDate.toISOString().slice(0, 10)] = ''
+            startDate = new Date(startDate.getTime() + 24*60*60*1000)
+          }
+          resolve(noteObj)
+        }
+      })
+    })
+  }
   return noteObj
 }
 
-async function getFavorite(db){
+async function getFavorite(db, user){
   let favoriteList = {}
-  await db.ref('/favorite').on('value', (snapshot) => { 
-    if(snapshot.exists()){
-      favoriteList = snapshot.val()
-    }
-  })
+  if(user.current){
+    return new Promise((resolve, reject) => {
+      db.ref('/' + user.current.uid + '/favorite').on('value', (snapshot) => { 
+        if(snapshot.exists()){
+          favoriteList = snapshot.val()
+          resolve(favoriteList)
+        }
+        else{
+          resolve(favoriteList)
+        }
+      })
+    })
+  }
   return favoriteList
 }
 
@@ -119,28 +133,28 @@ const Home = () => {
   var startDay = new Date(today.getTime() - 24*60*60*1000*5)
 
   const fetchFavorite = async () => {
-    var favoritePromise = getFavorite(database)
-    setFavoriteData(await favoritePromise)
+    let favorite = await getFavorite(database, user)
+    setFavoriteData(favorite)
   }
 
   const fetchData = async () => {
     var StockDataPromise = getStockData(searchData)
     var stockInformationPromise = getStockinformation(searchData.current.stockCode);
-    var notePromise = getNote(database,searchData);
-    var favoritePromise = getFavorite(database)
+    var notePromise = getNote(database,searchData, user);
+    var favoritePromise = getFavorite(database, user)
     //var capitalReductionPromise = getCapitalReductionData()
   
     await Promise.all([StockDataPromise, stockInformationPromise, notePromise, favoritePromise])
     .then(([stockData, stockInformation, note, favorite])=>{
+      isFetch.current = true
+      firstRender.current = false
       setStockData(stockData)
       setStockInformation(stockInformation)
       setNoteData(note)
       setFavoriteData(favorite)
       //setCapitalReductionData(capitalReduction)
-      isFetch.current = true
-      firstRender.current = false
     })
-    .catch(() => {
+    .catch((error) => {
       firstRender.current = true
       isFetch.current = false
       alert("查詢條件錯誤")
@@ -259,7 +273,7 @@ const Home = () => {
     e.preventDefault();
     let updateData = {}
     updateData[stockData.symbolId] = stockInformation?.data.meta.nameZhTw 
-    await database.ref('/favorite').update(updateData).then(() => {
+    await database.ref('/' + user.current.uid + '/favorite').update(updateData).then(() => {
       fetchFavorite()
     })
     .catch(() => {
@@ -273,7 +287,7 @@ const Home = () => {
     let note = e.target[1].value
     var updateData = {}
     updateData[date] = note
-    await database.ref('/note/' + stockData.symbolId ).update(updateData).then(() => {
+    await database.ref('/' + user.current.uid + '/note/' + stockData.symbolId ).update(updateData).then(() => {
     })
     .catch(() => {
       alert("儲存失敗")
@@ -379,7 +393,7 @@ const Home = () => {
           </div>
         </div>
         <div className="mx-2">
-          <FavoriteList favoriteData={favoriteData} fetchFavorite={fetchFavorite} searchData={searchData} fetchData={fetchData}/>
+          <FavoriteList favoriteData={favoriteData} fetchFavorite={fetchFavorite} searchData={searchData} fetchData={fetchData} user={user}/>
         </div>
         <Footer/>
       </div>
@@ -389,7 +403,6 @@ const Home = () => {
   if(stockData.length === 0 || !isFetch.current){
     return(<div>loading</div>)
   }
-
   var dataIndex = 0
   if(!firstRender.current){
     return (
@@ -435,7 +448,7 @@ const Home = () => {
               </div>
             </form>
           </div>
-          <FavoriteList favoriteData={favoriteData} fetchFavorite={fetchFavorite} searchData={searchData} fetchData={fetchData}/>
+          <FavoriteList favoriteData={favoriteData} fetchFavorite={fetchFavorite} searchData={searchData} fetchData={fetchData} user={user}/>
           <div className="card my-2">
             <PriceChart stockData={stockData} stockInformation={stockInformation.data?.meta}/>
           </div>

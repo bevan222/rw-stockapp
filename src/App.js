@@ -16,7 +16,7 @@ async function getStockData(searchData) {
   await fetch('https://api.fugle.tw/marketdata/v0.3/candles?symbolId='+searchData.current.stockCode+'&apiToken=' + process.env.REACT_APP_FUGLE_API_KEY + '&from=' + searchData.current.startDate +'&to=' + searchData.current.endDate)
   .then((response) => response.json())
   .then((stockDataList) => {
-    stockDataList.candles.reverse()
+    stockDataList.data.reverse()
     res = stockDataList
   })
   return res
@@ -200,7 +200,7 @@ const Home = () => {
     const workbook = new ExcelJs.Workbook();
     const sheet = workbook.addWorksheet('工作表名稱');
     let excelData = []
-    stockData.candles.map((item)=>{
+    stockData.data.map((item)=>{
       let excelRow = []
       excelRow[0] = item.date
       excelRow[1] = item.high
@@ -494,7 +494,7 @@ const Home = () => {
               </tr>
               </thead>
               <tbody>
-              {stockData.candles?.map((item) => {
+              {stockData.data?.map((item) => {
                   //const {id, name, address} = item;
                   if(dataIndex === 0){
                     dataIndex +=1 
@@ -524,9 +524,9 @@ const Home = () => {
                   return (
                       <tr key={item.date}>
                           <td style={{color: date.getDay() === 5 ? 'red':'green'}}>{item.date.slice(5,10).replaceAll('-','/')}</td>
-                          <td style={{color: item.high >= stockData.candles[dataIndex-2].close ? greaterOrEqualColor:lessThanColor}}>{item.high}</td>
-                          <td style={{color: item.low >= stockData.candles[dataIndex-2].close ? greaterOrEqualColor:lessThanColor}}>{item.low}</td>
-                          <td style={{color: item.close >= stockData.candles[dataIndex-2].close ? greaterOrEqualColor:lessThanColor }}>{item.close}</td>
+                          <td style={{color: item.high >= stockData.data[dataIndex-2].close ? greaterOrEqualColor:lessThanColor}}>{item.high}</td>
+                          <td style={{color: item.low >= stockData.data[dataIndex-2].close ? greaterOrEqualColor:lessThanColor}}>{item.low}</td>
+                          <td style={{color: item.close >= stockData.data[dataIndex-2].close ? greaterOrEqualColor:lessThanColor }}>{item.close}</td>
                           <td>
                             <form onSubmit={noteSubmit} className="text-nowrap form-inline">
                                 <input type="hidden" name="date" value={item.date}></input>

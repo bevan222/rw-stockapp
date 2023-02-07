@@ -29,13 +29,13 @@ const priceChart = ({stockData, stockInformation}) => {
           },
           title: {
             display: true,
-            text: stockData.candles[0].date + ' - ' + stockData.candles[stockData.candles.length - 1].date + ' 價格走勢圖',
+            text: stockData.data[0].date + ' - ' + stockData.data[stockData.data.length - 1].date + ' 價格走勢圖',
           },
         },
     };
 
     let labels = []; 
-    stockData.candles.map((item)=>{
+    stockData.data.map((item)=>{
         labels.push(item.date)
     })
 
@@ -44,7 +44,7 @@ const priceChart = ({stockData, stockInformation}) => {
         datasets: [
           {
             label: stockData.symbolId + stockInformation.nameZhTw + ' 收盤價',
-            data: stockData.candles.map((item) => item.close),
+            data: stockData.data.map((item) => item.close),
             borderColor: 'rgb(255, 99, 132)',
             backgroundColor: 'rgba(255, 99, 132, 0.5)',
           }
